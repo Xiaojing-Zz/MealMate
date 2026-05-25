@@ -29,7 +29,9 @@ class TestRecommend:
         })
         assert resp.status_code == 200
         dish = resp.json()["dish"]
-        assert "辣" in dish.get("tags", []) or dish.get("cuisine") == "川菜"
+        tags = dish.get("tags", [])
+        has_spicy = any("辣" in str(t) for t in tags)
+        assert has_spicy or dish.get("cuisine") == "川菜"
 
     async def test_recommend_with_price_filter(self, client, seed_dishes):
         """按价格筛选推荐"""
